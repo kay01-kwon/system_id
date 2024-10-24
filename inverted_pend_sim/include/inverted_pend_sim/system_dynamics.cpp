@@ -4,7 +4,8 @@
 #include "system_zz.hpp"
 
 SystemDynamics::SystemDynamics()
-:cmd_raw_(Vector4d::Zero()), quatf_(Quaternionf::Identity()), w_(Vector3d::Zero())
+:cmd_raw_(Vector4d::Zero()), quatf_(Quaternionf::Identity()), 
+w_(Vector3d::Zero()), time_(0.0), state_(Vector2d::Zero())
 {
     g_<<0, 0, -9.81;
     raw_to_rpm_factor_ = double (MAX_RPM) / double (MAX_BIT);
@@ -56,7 +57,18 @@ void SystemDynamics::raw_to_rpm(const Vector4i16 &cmd_raw, Vector4d &cmd_rpm)
 {
     for(size_t i = 0; i < 4; i++)
     {
-        cmd_rpm(i) = raw_to_rpm_factor_* cmd_raw(i);
+        if(cmd_raw(i) < 0)
+        {
+            cmd_rpm(i) = 0;
+        }
+        else if (cmd_raw(i) > MAX_BIT)
+        {
+            cmd_rpm(i) = 0;
+        }
+        else
+        {
+            cmd_rpm(i) = raw_to_rpm_factor_ * cmd_raw(i);
+        }
     }
 }
 

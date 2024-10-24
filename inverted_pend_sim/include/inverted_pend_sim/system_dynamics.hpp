@@ -41,6 +41,9 @@ class SystemDynamics
     Quaternionf quatf_;
     Vector3d w_;
 
+    Vector2d state_;
+    double time_;
+
     double raw_to_rpm_factor_;
 
 };
