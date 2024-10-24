@@ -11,6 +11,10 @@ class SystemYY : public SystemDynamics
     void system_dynamics(const Vector2d &state,
                          Vector2d &dsdt,
                          const double &dt) override;
+    
+    void state_to_quatf_w(const Vector2d &state,
+                          Quaternionf &quatf,
+                          Vector3d &w) override;
 };
 
 #endif // SYSTEM_YY_HPP

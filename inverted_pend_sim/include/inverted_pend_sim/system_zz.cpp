@@ -25,3 +25,19 @@ const double &t)
     dsdt(0) = psi_dot;
     dsdt(1) = 1/J_zz*tau_z;
 }
+
+void SystemZZ::state_to_quatf_w(const Vector2d &state, 
+Quaternionf &quatf, 
+Vector3d &w)
+{
+    double psi = state(0);
+    double psi_dot = state(1);
+
+    double qw = cos(psi/2);
+    double qx = 0;
+    double qy = 0;
+    double qz = sin(psi/2);
+
+    quatf = Quaternionf(qw, qx, qy, qz);
+    w = Vector3d(0, 0, psi_dot);
+}

@@ -18,11 +18,13 @@ class SystemDynamics
 
     void set_cmd_raw(const Vector4i16& cmd_raw);
 
-    void get_state(Quaternionf& quatf, Vector3d& w) const;
-
     virtual void system_dynamics(const Vector2d& state,
                                  Vector2d& dsdt,
                                  const double &t) = 0;
+
+    virtual void state_to_quatf_w(const Vector2d& state,
+                                  Quaternionf &quatf,
+                                  Vector3d &w) = 0;
 
     static unique_ptr<SystemDynamics> createSystem(SystemType system_type);
     
@@ -37,12 +39,6 @@ class SystemDynamics
 
     Vector4d cmd_raw_;
     Vector3d g_;
-
-    Quaternionf quatf_;
-    Vector3d w_;
-
-    Vector2d state_;
-    double time_;
 
     double raw_to_rpm_factor_;
 

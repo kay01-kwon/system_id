@@ -28,3 +28,19 @@ const double &dt)
     dsdt(0) = phi_dot;
     dsdt(1) = 1/J_yy*(tau_y + m*g_(2)*(x_CM*cos(phi) + z_CM*sin(phi)));
 }
+
+void SystemYY::state_to_quatf_w(const Vector2d &state, 
+Quaternionf &quatf, 
+Vector3d &w)
+{
+    double phi = state(0);
+    double phi_dot = state(1);
+
+    double qw = cos(phi/2);
+    double qx = 0;
+    double qy = sin(phi/2);
+    double qz = 0;
+
+    quatf = Quaternionf(qw, qx, qy, qz);
+    w = Vector3d(0, phi_dot, 0);
+}

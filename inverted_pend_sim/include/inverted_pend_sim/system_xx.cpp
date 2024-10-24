@@ -28,5 +28,21 @@ const double &t)
 
     dsdt(0) = theta_dot;
     dsdt(1) = 1/J_xx*(tau_x + m*g_(2)*(y_CM*cos(theta) + z_CM*sin(theta)));
+}
+
+void state_to_quatf_w(const Vector2d &state,
+Quaternionf &quatf,
+Vector3d &w)
+{
+    double theta = state(0);
+    double theta_dot = state(1);
+
+    double qw = cos(theta/2);
+    double qx = sin(theta/2);
+    double qy = 0;
+    double qz = 0;
+
+    quatf = Quaternionf(qw, qx, qy, qz);
+    w = Vector3d(theta_dot, 0, 0);
 
 }

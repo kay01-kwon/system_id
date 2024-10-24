@@ -3,19 +3,19 @@
 RosWrapperSimulator::RosWrapperSimulator(ros::NodeHandle &nh)
 {
     // Subscribe to the raw command topic
-    cmd_raw_sub = nh.subscribe("cmd_raw", 1, &RosWrapperSimulator::cmd_raw_callback, this);
-    imu_pub = nh.advertise<Imu>("imu", 1);
+    cmd_raw_sub_ = nh.subscribe("cmd_raw", 1, &RosWrapperSimulator::cmd_raw_callback, this);
+    imu_pub_ = nh.advertise<Imu>("imu", 1);
 
     string config_file, system_type_str;
-
-    SystemType system_type;
-
     InertialParams_t inertial_params;
     AeroCoeffs_t aero_coeffs;
+    SystemType system_type;
+    double perturb_state;
 
     nh.getParam("config_dir", config_file);
     nh.getParam("system_type", system_type_str);
-    
+    nh.getParam("perturb_state", perturb_state);
+
     YAMLRead yaml_reader(config_file);
     yaml_reader.get_inertial_params(inertial_params);
     yaml_reader.get_aero_coeffs(aero_coeffs);
@@ -38,7 +38,12 @@ RosWrapperSimulator::RosWrapperSimulator(ros::NodeHandle &nh)
         ros::shutdown();
     }
 
+    s_ << perturb_state, 0.0;
+
     system_dynamics_ = SystemDynamics::createSystem(system_type);
+
+    current_time_ = ros::Time::now().toSec();
+    last_time_ = current_time_;
 
 }
 
@@ -60,7 +65,43 @@ void RosWrapperSimulator::cmd_raw_callback(const cmd_rawConstPtr &msg)
     
 }
 
+void RosWrapperSimulator::run()
+{
+    while(ros::ok())
+    {
+        update_state();
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
+}
+
 void RosWrapperSimulator::update_state()
 {
-    
+    current_time_ = ros::Time::now().toSec();
+    double dt_ = current_time_ - last_time_;
+
+    stepper_.do_step([this](const Vector2d &s, Vector2d &dsdt, double t)
+    {
+        this->system_dynamics_->system_dynamics(s, dsdt, t);
+    }, s_, last_time_, current_time_, dt_);
+
+    last_time_ = current_time_;
+
+    system_dynamics_->state_to_quatf_w(s_,quatf_,w_);
+
+    Imu imu_msg;
+
+    imu_msg.header.stamp = ros::Time::now();
+    imu_msg.header.frame_id = "body_frame";
+
+    imu_msg.orientation.w = quatf_.w();
+    imu_msg.orientation.x = quatf_.x();
+    imu_msg.orientation.y = quatf_.y();
+    imu_msg.orientation.z = quatf_.z();
+
+    imu_msg.angular_velocity.x = w_(0);
+    imu_msg.angular_velocity.y = w_(1);
+    imu_msg.angular_velocity.z = w_(2);
+
+    imu_pub_.publish(imu_msg);
 }

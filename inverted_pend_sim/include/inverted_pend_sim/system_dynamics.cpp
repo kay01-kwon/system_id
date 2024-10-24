@@ -4,8 +4,7 @@
 #include "system_zz.hpp"
 
 SystemDynamics::SystemDynamics()
-:cmd_raw_(Vector4d::Zero()), quatf_(Quaternionf::Identity()), 
-w_(Vector3d::Zero()), time_(0.0), state_(Vector2d::Zero())
+:cmd_raw_(Vector4d::Zero())
 {
     g_<<0, 0, -9.81;
     raw_to_rpm_factor_ = double (MAX_RPM) / double (MAX_BIT);
@@ -25,12 +24,6 @@ const AeroCoeffs_t &aero_coeffs)
 void SystemDynamics::set_cmd_raw(const Vector4i16 &cmd_raw)
 {
     cmd_raw_ = cmd_raw;
-}
-
-void SystemDynamics::get_state(Quaternionf &quatf, Vector3d &w) const
-{
-    quatf = quatf_;
-    w = w_;
 }
 
 unique_ptr<SystemDynamics> SystemDynamics::createSystem(SystemType system_type)
