@@ -18,9 +18,9 @@ class YAMLRead
 
     void load_yaml_file();
 
-    void read_inertial_params(InertialParams_t &inertial_params) const;
+    void get_inertial_params(InertialParams_t &inertial_params) const;
 
-    void read_aero_coeffs(AeroCoeffs_t &aero_coeffs) const;
+    void get_aero_coeffs(AeroCoeffs_t &aero_coeffs) const;
 
     private:
 
