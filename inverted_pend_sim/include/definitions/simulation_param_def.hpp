@@ -29,7 +29,7 @@ typedef struct _AeroCoffs
 {
     double C_T;
     double C_M;
-    double l;
+    double s;
 } AeroCoeffs_t;
 
 #endif // SIMULATION_PARAM_DEF_HPP

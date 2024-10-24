@@ -13,13 +13,14 @@ class SystemDynamics
 
     virtual ~SystemDynamics();
 
+    void set_params(const InertialParams_t& inertial_params,
+                           const AeroCoeffs_t& aero_coeffs);
+
     virtual void system_dynamics(const Vector2d& state,
                                  Vector2d& dsdt,
                                  const double &t) = 0;
 
-    static unique_ptr<SystemDynamics> createSystem(SystemType system_type,
-                                        const InertialParams_t& inertial_params,
-                                        const AeroCoeffs_t& aero_coeffs);
+    static unique_ptr<SystemDynamics> createSystem(SystemType system_type);
     
     protected:
 
@@ -32,6 +33,8 @@ class SystemDynamics
 
     Vector4d cmd_rpm_;
     Vector3d g_;
+
+    double l_;
 
     Quaternionf quatf_;
     Vector3d w_;

@@ -1,10 +1,7 @@
 #include "system_xx.hpp"
 
-SystemXX::SystemXX(const InertialParams_t &inertial_params, 
-const AeroCoeffs_t &aero_coeffs)
+SystemXX::SystemXX()
 {
-    inertial_params_ = inertial_params;
-    aero_coeffs_ = aero_coeffs;
 }
 
 void SystemXX::system_dynamics(const Vector2d &state, 

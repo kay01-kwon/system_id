@@ -8,8 +8,6 @@ class SystemZZ : public SystemDynamics
 
     SystemZZ();
 
-    SystemZZ(const InertialParams_t &inertial_params, 
-             const AeroCoeffs_t &aero_coeffs);
 };
 
 

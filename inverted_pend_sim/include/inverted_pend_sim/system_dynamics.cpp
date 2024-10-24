@@ -14,28 +14,31 @@ SystemDynamics::~SystemDynamics()
 {
 }
 
-unique_ptr<SystemDynamics> SystemDynamics::createSystem(SystemType system_type, 
-const InertialParams_t &inertial_params, 
+void SystemDynamics::set_params(const InertialParams_t &inertial_params, 
 const AeroCoeffs_t &aero_coeffs)
-{   
+{
+    inertial_params_ = inertial_params;
+    aero_coeffs_ = aero_coeffs;
+}
+
+unique_ptr<SystemDynamics> SystemDynamics::createSystem(SystemType system_type)
+{
+
     switch(system_type)
     {
         case SystemType::SYSTEM_XX:
-            return std::make_unique<SystemXX>(inertial_params, aero_coeffs);
+            return std::make_unique<SystemXX>();
         
         case SystemType::SYSTEM_YY:
-            return std::make_unique<SystemYY>(inertial_params, aero_coeffs);
+            return std::make_unique<SystemYY>();
 
         case SystemType::SYSTEM_ZZ:
-            return std::make_unique<SystemZZ>(inertial_params, aero_coeffs);
+            return std::make_unique<SystemZZ>();
 
         default:
-
             std::cout<<"Invalid system type"<<std::endl;
             return nullptr;
     }
-
-    return nullptr;
 }
 
 void SystemDynamics::raw_to_rpm(const Vector4i16 &cmd_raw, Vector4d &cmd_rpm)
@@ -48,5 +51,4 @@ void SystemDynamics::raw_to_rpm(const Vector4i16 &cmd_raw, Vector4d &cmd_rpm)
 
 void SystemDynamics::rpm_to_moment(const Vector4d &cmd_rpm, Vector3d &moment)
 {
-
 }

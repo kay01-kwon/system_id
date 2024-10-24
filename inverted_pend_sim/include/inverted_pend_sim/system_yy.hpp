@@ -8,9 +8,6 @@ class SystemYY : public SystemDynamics
 
     SystemYY();
 
-    SystemYY(const InertialParams_t &inertial_params,
-             const AeroCoeffs_t &aero_coeffs);
-
     void system_dynamics(const Vector2d &state,
                          Vector2d &dsdt,
                          const double &dt) override;
