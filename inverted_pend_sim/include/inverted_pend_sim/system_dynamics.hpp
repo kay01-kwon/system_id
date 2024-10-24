@@ -1,7 +1,9 @@
 #ifndef SYSTEM_DYNAMICS_HPP
 #define SYSTEM_DYNAMICS_HPP
 #include "definitions/simulation_param_def.hpp"
-#include <boost/make_unique.hpp>
+#include <memory>
+
+using std::unique_ptr;
 
 class SystemDynamics
 {
@@ -15,7 +17,7 @@ class SystemDynamics
                                  Vector2d& dsdt,
                                  const double &t) = 0;
 
-    static SystemDynamics* createSystem(SystemType system_type,
+    static unique_ptr<SystemDynamics> createSystem(SystemType system_type,
                                         const InertialParams_t& inertial_params,
                                         const AeroCoeffs_t& aero_coeffs);
     
@@ -23,13 +25,16 @@ class SystemDynamics
 
     void raw_to_rpm(const Vector4i16& cmd_raw, Vector4d& cmd_rpm);
 
-    private:
+    void rpm_to_moment(const Vector4d& cmd_rpm, Vector3d& moment);
 
     InertialParams_t inertial_params_;
     AeroCoeffs_t aero_coeffs_;
 
     Vector4d cmd_rpm_;
+    Vector3d g_;
+
     Quaternionf quatf_;
+    Vector3d w_;
 
     double raw_to_rpm_factor_;
 

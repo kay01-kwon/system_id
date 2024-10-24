@@ -9,12 +9,11 @@ class SystemXX: public SystemDynamics
     SystemXX();
 
     SystemXX(const InertialParams_t &inertial_params, 
-    const AeroCoeffs_t &aero_coeffs);
-    
+             const AeroCoeffs_t &aero_coeffs);
 
-    protected:
-
-    private:
+    void system_dynamics(const Vector2d &state, 
+                         Vector2d &dsdt, 
+                         const double &t) override;
 
 };
 
