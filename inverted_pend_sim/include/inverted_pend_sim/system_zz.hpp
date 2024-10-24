@@ -8,6 +8,10 @@ class SystemZZ : public SystemDynamics
 
     SystemZZ();
 
+    void system_dynamics(const Vector2d& state,
+                         Vector2d& dsdt,
+                         const double &t) override;
+
 };
 
 

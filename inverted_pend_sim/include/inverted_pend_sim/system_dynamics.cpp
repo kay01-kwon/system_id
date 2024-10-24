@@ -65,11 +65,11 @@ void SystemDynamics::rpm_to_moment(const Vector4d &cmd_rpm, Vector3d &moment)
 
     Vector4d rpm_squared = cmd_rpm.cwiseProduct(cmd_rpm);
 
-    moment(0) = aero_coeffs_.l/2 * aero_coeffs_.C_T * 
+    moment(0) = aero_coeffs_.l/2.0 * aero_coeffs_.C_T * 
     (rpm_squared(0) - rpm_squared(1) 
     - rpm_squared(2) + rpm_squared(3));
 
-    moment(1) = aero_coeffs_.l/2 * 
+    moment(1) = aero_coeffs_.l/2.0 * aero_coeffs_.C_T *
     (-rpm_squared(0) - rpm_squared(1)
     + rpm_squared(2) + rpm_squared(3));
 
