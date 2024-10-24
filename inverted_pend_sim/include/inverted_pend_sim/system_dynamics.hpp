@@ -16,6 +16,10 @@ class SystemDynamics
     void set_params(const InertialParams_t& inertial_params,
                            const AeroCoeffs_t& aero_coeffs);
 
+    void set_cmd_raw(const Vector4i16& cmd_raw);
+
+    void get_state(Quaternionf& quatf, Vector3d& w) const;
+
     virtual void system_dynamics(const Vector2d& state,
                                  Vector2d& dsdt,
                                  const double &t) = 0;
@@ -31,10 +35,8 @@ class SystemDynamics
     InertialParams_t inertial_params_;
     AeroCoeffs_t aero_coeffs_;
 
-    Vector4d cmd_rpm_;
+    Vector4d cmd_raw_;
     Vector3d g_;
-
-    double l_;
 
     Quaternionf quatf_;
     Vector3d w_;
