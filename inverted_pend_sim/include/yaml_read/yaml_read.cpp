@@ -7,6 +7,16 @@ YAMLRead::YAMLRead(const string &file_path)
 
 }
 
+void YAMLRead::get_inertial_params(InertialParams_t &inertial_params) const
+{
+    inertial_params = inertial_params_;
+}
+
+void YAMLRead::get_aero_coeffs(AeroCoeffs_t &aero_coeffs) const
+{
+    aero_coeffs = aero_coeffs_;
+}
+
 void YAMLRead::load_yaml_file()
 {
     try{
@@ -22,16 +32,6 @@ void YAMLRead::load_yaml_file()
     {
         cerr << "Error: " << e.what() << endl;
     }
-}
-
-void YAMLRead::get_inertial_params(InertialParams_t &inertial_params) const
-{
-    inertial_params = inertial_params_;
-}
-
-void YAMLRead::get_aero_coeffs(AeroCoeffs_t &aero_coeffs) const
-{
-    aero_coeffs = aero_coeffs_;
 }
 
 void YAMLRead::get_inertial_params_from_yaml(const Node &config)
