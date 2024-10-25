@@ -1,6 +1,7 @@
 #include "ros_wrapper_simulator.hpp"
 
 RosWrapperSimulator::RosWrapperSimulator(ros::NodeHandle &nh)
+:s_(Vector2d::Zero()), quatf_(Quaternionf::Identity()), w_(Vector3d::Zero())
 {
     // Subscribe to the raw command topic
     cmd_raw_sub_ = nh.subscribe("cmd_raw", 1, &RosWrapperSimulator::cmd_raw_callback, this);
@@ -42,6 +43,8 @@ RosWrapperSimulator::RosWrapperSimulator(ros::NodeHandle &nh)
 
     system_dynamics_ = SystemDynamics::createSystem(system_type);
 
+    system_dynamics_->set_params(inertial_params, aero_coeffs);
+
     current_time_ = ros::Time::now().toSec();
     last_time_ = current_time_;
 
@@ -82,7 +85,7 @@ void RosWrapperSimulator::update_state()
 
     stepper_.do_step([this](const Vector2d &s, Vector2d &dsdt, const double &t)
     {
-        this->system_dynamics_->system_dynamics(s, dsdt, t);
+        system_dynamics_->system_dynamics(s, dsdt, t);
     }, s_, last_time_, dt_);
 
     last_time_ = current_time_;
