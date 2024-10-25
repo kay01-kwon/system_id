@@ -32,6 +32,10 @@ void YAMLRead::load_yaml_file()
     {
         cerr << "Error: " << e.what() << endl;
     }
+    catch(const YAML::ParserException &e)
+    {
+        cerr << "Error: " << e.what() << endl;
+    }
 }
 
 void YAMLRead::get_inertial_params_from_yaml(const Node &config)

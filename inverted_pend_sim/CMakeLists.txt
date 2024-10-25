@@ -4,6 +4,8 @@ project(inverted_pend_sim)
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++14)
 
+find_package(yaml-cpp REQUIRED)
+
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
@@ -27,7 +29,8 @@ catkin_package(
 include_directories(
   include
   ${catkin_INCLUDE_DIRS}
-  ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_BIN_DESTINATION}
+  ${YAML_CPP_INCLUDE_DIRS}
+  ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}
 )
 
 add_executable(
@@ -43,5 +46,6 @@ add_executable(
 
 target_link_libraries(
   inverted_pend_sim_node
+  ${YAML_CPP_LIBRARIES}
   ${catkin_LIBRARIES}
 )

@@ -2,6 +2,7 @@
 #define ROS_WRAPPER_SIMULATOR_HPP
 
 #include "inverted_pend_sim/system_dynamics.hpp"
+#include <boost/lambda/lambda.hpp>
 #include <boost/numeric/odeint.hpp>
 #include <boost/numeric/odeint/external/eigen/eigen.hpp>
 #include "yaml_read/yaml_read.hpp"

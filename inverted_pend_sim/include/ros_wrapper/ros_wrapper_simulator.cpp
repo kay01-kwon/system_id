@@ -54,12 +54,12 @@ RosWrapperSimulator::~RosWrapperSimulator()
 
 void RosWrapperSimulator::cmd_raw_callback(const cmd_rawConstPtr &msg)
 {
-    Vector4i16 cmd_raw;
+    int16_t cmd_raw[4];
 
-    cmd_raw << msg->raw[0],
-               msg->raw[1],
-               msg->raw[2],
-               msg->raw[3];
+    for(size_t i = 0; i < 4; i++)
+    {
+        cmd_raw[i] = msg->raw[i];
+    }
 
     system_dynamics_->set_cmd_raw(cmd_raw);
     
@@ -80,10 +80,10 @@ void RosWrapperSimulator::update_state()
     current_time_ = ros::Time::now().toSec();
     double dt_ = current_time_ - last_time_;
 
-    stepper_.do_step([this](const Vector2d &s, Vector2d &dsdt, double t)
+    stepper_.do_step([this](const Vector2d &s, Vector2d &dsdt, const double &t)
     {
         this->system_dynamics_->system_dynamics(s, dsdt, t);
-    }, s_, last_time_, current_time_, dt_);
+    }, s_, last_time_, dt_);
 
     last_time_ = current_time_;
 

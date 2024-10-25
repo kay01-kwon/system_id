@@ -22,7 +22,7 @@ class SystemDynamics
                                  Vector2d& dsdt,
                                  const double &t) = 0;
 
-    virtual void state_to_quatf_w(const Vector2d& state,
+    virtual void state_to_quatf_w(const Vector2d &state,
                                   Quaternionf &quatf,
                                   Vector3d &w) = 0;
 

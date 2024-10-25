@@ -14,7 +14,7 @@ class YAMLRead
     public:
 
     YAMLRead(const string &file_path);
-    ~YAMLRead();
+    ~YAMLRead() = default;
 
     void get_inertial_params(InertialParams_t &inertial_params) const;
 
