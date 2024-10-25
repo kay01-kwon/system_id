@@ -17,7 +17,6 @@ const double &t)
     double y_CM = inertial_params_.CG_r_CM(1);
     double z_CM = inertial_params_.CG_r_CM(2);
 
-
     double theta = state(0);
     double theta_dot = state(1);
 
@@ -27,7 +26,7 @@ const double &t)
     double tau_x = moment(0);
 
     dsdt(0) = theta_dot;
-    dsdt(1) = 1/J_xx*(tau_x + m*g_(2)*(y_CM*cos(theta) + z_CM*sin(theta)));
+    dsdt(1) = 1/J_xx*(tau_x + m*g_(2)*(y_CM*cos(theta) - z_CM*sin(theta)));
 }
 
 void SystemXX::state_to_quatf_w(const Vector2d &state,
