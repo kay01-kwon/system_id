@@ -39,5 +39,5 @@ Vector3d &w)
     double qz = sin(psi/2);
 
     quatf = Quaternionf(qw, qx, qy, qz);
-    w = Vector3d(0, 0, psi_dot);
+    w << 0, 0, psi_dot;
 }

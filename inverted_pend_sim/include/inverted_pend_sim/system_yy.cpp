@@ -42,5 +42,5 @@ Vector3d &w)
     double qz = 0;
 
     quatf = Quaternionf(qw, qx, qy, qz);
-    w = Vector3d(0, phi_dot, 0);
+    w << 0, phi_dot, 0;
 }
