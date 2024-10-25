@@ -15,7 +15,6 @@ using Eigen::Quaternion;
 typedef Eigen::Matrix<double, 2, 1> Vector2d;
 typedef Eigen::Matrix<double, 3, 1> Vector3d;
 typedef Eigen::Matrix<double, 4, 1> Vector4d;
-typedef Eigen::Matrix<int16_t, 4, 1> Vector4i16;
 
 // Definition of Eigen matrices
 typedef Eigen::Matrix<double, 2, 2> Matrix2d;

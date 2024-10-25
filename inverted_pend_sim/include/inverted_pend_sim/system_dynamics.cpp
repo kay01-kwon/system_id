@@ -4,7 +4,7 @@
 #include "system_zz.hpp"
 
 SystemDynamics::SystemDynamics()
-:cmd_raw_(Vector4d::Zero())
+: cmd_raw_{0, 0, 0, 0}
 {
     g_<<0, 0, -9.81;
     raw_to_rpm_factor_ = double (MAX_RPM) / double (MAX_BIT);
@@ -21,9 +21,10 @@ const AeroCoeffs_t &aero_coeffs)
     aero_coeffs_ = aero_coeffs;
 }
 
-void SystemDynamics::set_cmd_raw(const Vector4i16 &cmd_raw)
+void SystemDynamics::set_cmd_raw(const int16_t *cmd_raw)
 {
-    cmd_raw_ = cmd_raw;
+    for(size_t i = 0; i < 4; i++)
+        cmd_raw_[i] = cmd_raw[i];
 }
 
 unique_ptr<SystemDynamics> SystemDynamics::createSystem(SystemType system_type)
@@ -46,21 +47,21 @@ unique_ptr<SystemDynamics> SystemDynamics::createSystem(SystemType system_type)
     }
 }
 
-void SystemDynamics::raw_to_rpm(const Vector4i16 &cmd_raw, Vector4d &cmd_rpm)
+void SystemDynamics::raw_to_rpm(const int16_t *cmd_raw, Vector4d &cmd_rpm)
 {
     for(size_t i = 0; i < 4; i++)
     {
-        if(cmd_raw(i) < 0)
+        if(cmd_raw[i] < 0)
         {
             cmd_rpm(i) = 0;
         }
-        else if (cmd_raw(i) > MAX_BIT)
+        else if (cmd_raw[i] > MAX_BIT)
         {
             cmd_rpm(i) = 0;
         }
         else
         {
-            cmd_rpm(i) = raw_to_rpm_factor_ * cmd_raw(i);
+            cmd_rpm(i) = raw_to_rpm_factor_ * cmd_raw[i];
         }
     }
 }

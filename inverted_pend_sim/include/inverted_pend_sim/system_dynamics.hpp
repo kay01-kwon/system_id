@@ -16,7 +16,7 @@ class SystemDynamics
     void set_params(const InertialParams_t& inertial_params,
                            const AeroCoeffs_t& aero_coeffs);
 
-    void set_cmd_raw(const Vector4i16& cmd_raw);
+    void set_cmd_raw(const int16_t *cmd_raw);
 
     virtual void system_dynamics(const Vector2d& state,
                                  Vector2d& dsdt,
@@ -30,14 +30,14 @@ class SystemDynamics
     
     protected:
 
-    void raw_to_rpm(const Vector4i16& cmd_raw, Vector4d& cmd_rpm);
+    void raw_to_rpm(const int16_t *cmd_raw, Vector4d& cmd_rpm);
 
     void rpm_to_moment(const Vector4d& cmd_rpm, Vector3d& moment);
 
     InertialParams_t inertial_params_;
     AeroCoeffs_t aero_coeffs_;
 
-    Vector4d cmd_raw_;
+    int16_t cmd_raw_[4];
     Vector3d g_;
 
     double raw_to_rpm_factor_;
