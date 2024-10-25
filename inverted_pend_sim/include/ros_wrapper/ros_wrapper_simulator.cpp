@@ -11,11 +11,13 @@ RosWrapperSimulator::RosWrapperSimulator(ros::NodeHandle &nh)
     InertialParams_t inertial_params;
     AeroCoeffs_t aero_coeffs;
     SystemType system_type;
+    double c;
     double perturb_state;
 
     nh.getParam("config_dir", config_file);
     nh.getParam("system_type", system_type_str);
     nh.getParam("perturb_state", perturb_state);
+    nh.getParam("c", c);
 
     YAMLRead yaml_reader(config_file);
     yaml_reader.get_inertial_params(inertial_params);
@@ -43,7 +45,7 @@ RosWrapperSimulator::RosWrapperSimulator(ros::NodeHandle &nh)
 
     system_dynamics_ = SystemDynamics::createSystem(system_type);
 
-    system_dynamics_->set_params(inertial_params, aero_coeffs);
+    system_dynamics_->set_params(inertial_params, aero_coeffs, c);
 
     current_time_ = ros::Time::now().toSec();
     last_time_ = current_time_;

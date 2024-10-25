@@ -14,7 +14,8 @@ class SystemDynamics
     virtual ~SystemDynamics();
 
     void set_params(const InertialParams_t& inertial_params,
-                           const AeroCoeffs_t& aero_coeffs);
+                    const AeroCoeffs_t& aero_coeffs,
+                    const double& c);
 
     void set_cmd_raw(const int16_t *cmd_raw);
 
@@ -36,6 +37,7 @@ class SystemDynamics
 
     InertialParams_t inertial_params_;
     AeroCoeffs_t aero_coeffs_;
+    double c_;
 
     int16_t cmd_raw_[4];
     Vector3d g_;

@@ -5,4 +5,5 @@
     <param name="config_dir" value="$(find inverted_pend_sim)/config/param.yaml"/>
     <param name="system_type" type="string" value="SYSTEM_XX"/>
     <param name="perturb_state" type="double" value="0.035"/>
+    <param name="c" type="double"  value="0.1"/>
 </launch>

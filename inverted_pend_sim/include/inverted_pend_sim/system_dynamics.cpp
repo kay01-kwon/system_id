@@ -15,10 +15,12 @@ SystemDynamics::~SystemDynamics()
 }
 
 void SystemDynamics::set_params(const InertialParams_t &inertial_params, 
-const AeroCoeffs_t &aero_coeffs)
+const AeroCoeffs_t &aero_coeffs,
+const double &c)
 {
     inertial_params_ = inertial_params;
     aero_coeffs_ = aero_coeffs;
+    c_ = c;
 }
 
 void SystemDynamics::set_cmd_raw(const int16_t *cmd_raw)

@@ -26,7 +26,9 @@ const double &dt)
     double tau_y = moment(1);
 
     dsdt(0) = phi_dot;
-    dsdt(1) = 1/J_yy*(tau_y + m*g_(2)*(x_CM*cos(phi) + z_CM*sin(phi)));
+    dsdt(1) = 1/J_yy*(tau_y 
+                      + m*g_(2)*(x_CM*cos(phi) + z_CM*sin(phi))
+                      -c_*phi_dot);
 }
 
 void SystemYY::state_to_quatf_w(const Vector2d &state, 
