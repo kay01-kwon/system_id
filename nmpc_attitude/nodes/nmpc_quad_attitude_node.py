@@ -20,6 +20,7 @@ from nmpc_attitude_pkg import ocp_solver
 import rospy
 from sensor_msgs.msg import Imu
 from ros_libcanard.msg import cmd_raw
+from std_msgs.msg import Float64
 
 class nmpc_quad_node:
     def __init__(self):
@@ -63,7 +64,7 @@ class nmpc_quad_node:
                                         queue_size=1)
 
         self.ref_sub = rospy.Subscriber('/ref',
-                                        Imu,
+                                        Float64,
                                         self.Ref_callback,
                                         queue_size=1)
 
@@ -86,10 +87,15 @@ class nmpc_quad_node:
         self.state[6] = msg.angular_velocity.z
 
     def Ref_callback(self, msg):
-        self.ref[0] = msg.orientation.w
-        self.ref[1] = msg.orientation.x
-        self.ref[2] = msg.orientation.y
-        self.ref[3] = msg.orientation.z
+        pitch = msg.data*np.pi/180
+        self.ref[0] = np.cos(pitch/2)
+        self.ref[1] = np.sin(pitch/2)
+        self.ref[2] = 0
+        self.ref[3] = 0
+
+        self.ref[4] = 0
+        self.ref[5] = 0
+        self.ref[6] = 0
 
     def publish_control_input(self):
         status, self.u = self.ocp_solver_obj.ocp_solve(self.state, self.ref)

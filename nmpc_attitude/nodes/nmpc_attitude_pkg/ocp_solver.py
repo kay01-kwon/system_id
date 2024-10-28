@@ -2,6 +2,7 @@ from acados_template import AcadosOcp, AcadosOcpSolver
 from quad_attitude_model import QuadModel
 import scipy.linalg
 import numpy as np
+import tools
 
 # Initial state
 X0 = np.array([
@@ -23,10 +24,13 @@ class OcpSolver():
         # Create AcadosOcp
         self.ocp = AcadosOcp()
 
+        self.l_ = 0.340 *np.sqrt(2)/2
+        self.C_moment = 2.524e-09
+
         # Object generation
         quad_model_obj = QuadModel(J =np.array([0.020, 0.020, 0.012]),
-                                l = 0.34*np.sqrt(2)/2,
-                                C_moment = 2.524e-09,
+                                l = self.l_,
+                                C_moment = self.C_moment,
                                 model_description = 'x')
 
         # Get Quad model from the quad_model_obj
@@ -148,6 +152,13 @@ class OcpSolver():
         status = self.acados_ocp_solver.solve()
 
         u = self.acados_ocp_solver.get(0,"u")
+
+        moment = tools.thrust2moment('x', u, self.l_, self.C_moment)
+
+        print("Moment x: ", moment[0])
+        print("Moment y: ", moment[1])
+        print("Moment z: ", moment[2])
+        print("\n")
 
         self.u_prev = u
 

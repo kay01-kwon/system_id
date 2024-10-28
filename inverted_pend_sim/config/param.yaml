@@ -10,9 +10,9 @@ inertial_params:
         Jzz: 0.012
     CM:
         x: 0.00
-        y: 0.010
-        z: -0.050
+        y: 0.001
+        z: -0.01
 aero_coeffs:
-    C_T: 1.48e-9
+    C_T: 1.48e-7
     C_M: 2.524e-9
     l: 0.340
