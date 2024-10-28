@@ -41,7 +41,6 @@ class nmpc_quad_node:
         self.u_msg = cmd_raw()
 
         self.C_T = 1.481e-07
-        self.C_M = 2.524e-09
 
         self.MaxBit = 8191
         self.MaxRPM = 9800
@@ -55,7 +54,6 @@ class nmpc_quad_node:
         :return: None
         '''
 
-        # To do list
         # Construct message filter to subscribe
         # imu (quaternion and angular velocity), and reference
 
@@ -64,8 +62,13 @@ class nmpc_quad_node:
                                         self.Imu_callback,
                                         queue_size=1)
 
+        self.ref_sub = rospy.Subscriber('/ref',
+                                        Imu,
+                                        self.Ref_callback,
+                                        queue_size=1)
 
-        # Input publisher to hummingbird
+
+        # Input publisher to esc
         self.input_pub = rospy.Publisher('/cmd_raw',
                                          cmd_raw,
                                          queue_size=1)
@@ -81,6 +84,12 @@ class nmpc_quad_node:
         self.state[4] = msg.angular_velocity.x
         self.state[5] = msg.angular_velocity.y
         self.state[6] = msg.angular_velocity.z
+
+    def Ref_callback(self, msg):
+        self.ref[0] = msg.orientation.w
+        self.ref[1] = msg.orientation.x
+        self.ref[2] = msg.orientation.y
+        self.ref[3] = msg.orientation.z
 
     def publish_control_input(self):
         status, self.u = self.ocp_solver_obj.ocp_solve(self.state, self.ref)
