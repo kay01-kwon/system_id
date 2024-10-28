@@ -3,10 +3,9 @@ import tools
 import casadi as cs
 
 class QuadModel:
-    def __init__(self, m, J, l, C_moment, model_description):
+    def __init__(self, J, l, C_moment, model_description):
         '''
         Constructor for QuadModel
-        :param m: mass
         :param J: Put np.diag([Jxx, Jyy, Jzz])
         :param l: arm length
         :param C_moment: Coefficient of moment
@@ -20,8 +19,7 @@ class QuadModel:
         self.l = l
 
         # Get parameters
-        # mass, moment of inertia, lift coefficient, moment coefficient
-        self.m = m
+        # moment of inertia, lift coefficient, moment coefficient
         self.J = J
         self.C_moment = C_moment
 
@@ -29,12 +27,10 @@ class QuadModel:
         self.model_description = model_description
 
         # Casadi: Assign x (state)
-        self.p = cs.MX.sym('p',3)   # position              px py pz
-        self.v = cs.MX.sym('v',3)   # linear velocity       vx vy vz
         self.q = cs.MX.sym('q',4)   # quaternion            qw qx qy qz
         self.w = cs.MX.sym('w',3)   # angular velocity      wx wy wz
-        self.x = cs.vertcat(self.p, self.v, self.q, self.w)     #state
-        self.x_dim = 13
+        self.x = cs.vertcat( self.q, self.w)     #state
+        self.x_dim = 7
 
         # Casadi: Assign u (control input: rotor speed)
         self.u1 = cs.MX.sym('u1')
@@ -45,11 +41,9 @@ class QuadModel:
         self.u_dim = 4
 
         # Casadi: Assign xdot (The differentiation of the state)
-        self.dpdt = cs.MX.sym('dpdt',3)     # dp_x/dt dp_y/dt dp_z/dt
-        self.dvdt = cs.MX.sym('dvdt',3)     # dv_x/dt dv_y/dt dv_z/dt
         self.dqdt = cs.MX.sym('dqdt',4)     # dq_w/dt dq_x/dt dq_y/dt dq_z/dt
         self.dwdt = cs.MX.sym('dwdt',3)     # dw_x/dt dw_y/dt dw_z/dt
-        self.xdot = cs.vertcat(self.dpdt, self.dvdt, self.dqdt, self.dwdt)      # dpdt dvdt dqdt dwdt
+        self.xdot = cs.vertcat( self.dqdt, self.dwdt)      # dpdt dvdt dqdt dwdt
 
 
     def get_acados_model(self):
@@ -59,8 +53,7 @@ class QuadModel:
         '''
 
         # Set explicit dynamics and kinematics
-        self.f_expl = cs.vertcat(self.p_kinematics(), self.v_dynamics(),
-                                 self.q_kinematics(), self.w_dynamics())
+        self.f_expl = cs.vertcat(self.q_kinematics(), self.w_dynamics())
 
         self.f_impl = self.xdot - self.f_expl
 
@@ -71,37 +64,6 @@ class QuadModel:
         self.model.u = self.u
         self.model.name = self.model_name
         return self.model
-
-    def p_kinematics(self):
-        '''
-        p kinematics
-        :return: v (linear velocity)
-        '''
-        return self.v
-
-    def v_dynamics(self):
-        '''
-        v dynamics
-        :return: dvdt (linear acceleration)
-        '''
-        # Get the collective thrust to compute the dynamics
-        collective_thrust = self.u1 + self.u2 + self.u3 + self.u4
-
-        # Represent it as force vector
-        force = cs.vertcat(0, 0, collective_thrust)
-
-        # Divide mass to get acceleration control input
-        acc_input = force/self.m
-
-        # Gravity vector
-        g_vec = cs.vertcat(0.0, 0.0, -9.81)
-
-        # Get rotation matrix from quaternion
-        rotm = tools.quaternion2rotm(self.q)
-
-        dvdt = cs.mtimes(rotm, acc_input) + g_vec
-        return dvdt
-
 
     def q_kinematics(self):
         '''

@@ -129,7 +129,7 @@ def thrust2moment(model_description, thrust, arm_length, C_moment):
         m_y = l*( thrust[2] - thrust[0])
     else:
         l = arm_length*np.sqrt(2)/2
-        m_x = l*( -thrust[0] + thrust[1] + thrust[2] - thrust[3])
+        m_x = l*( thrust[0] - thrust[1] - thrust[2] + thrust[3])
         m_y = l*( -(thrust[0] + thrust[1]) + (thrust[2] + thrust[3]))
 
     m_z = C_moment*( thrust[0] - thrust[1] + thrust[2] - thrust[3] )

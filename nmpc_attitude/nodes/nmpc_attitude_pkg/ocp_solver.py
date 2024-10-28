@@ -1,22 +1,17 @@
-import os
-import shutil
-import sys
 from acados_template import AcadosOcp, AcadosOcpSolver
-from quad_model import QuadModel
+from quad_attitude_model import QuadModel
 import scipy.linalg
 import numpy as np
 
 # Initial state
 X0 = np.array([
-    0.0, 0.0, 0.0,          # position
-    0.0, 0.0, 0.0,          # velocity
     1, 0.0, 0.0, 0.0,     # quaternion
     0.0, 0.0, 0.0           # angular velocity
 ])
 
 
 class OcpSolver():
-    def __init__(self, u_min = 0., u_max = 5, n_nodes = 10, t_horizon = 1.0):
+    def __init__(self, u_min = 0.78, u_max = 8.8, n_nodes = 10, t_horizon = 0.1):
         '''
         Constructor for OcpSolver
         :param u_min: minimum rotor thrust (N)
@@ -25,45 +20,14 @@ class OcpSolver():
         :param T_horizon: Prediction horizon
         '''
 
-        # If there exist c_generated_code and acados json file
-        # remove it.
-        nmpc_pkg_dir = os.getcwd()
-        print(nmpc_pkg_dir)
-        node_dir = os.path.dirname(nmpc_pkg_dir)
-        nmpc_quad_dir = os.path.dirname(node_dir)
-        prev_dir = os.path.dirname(nmpc_quad_dir)
-
-        acados_json_dir = os.path.join(prev_dir, "acados_ocp_nlp.json")
-        acados_c_dir = prev_dir + '/c_generated_code'
-
-        print('Acados json directory: ',acados_json_dir)
-        print('Acados c generated directory: ',acados_c_dir)
-
-        if os.path.exists(acados_json_dir):
-            os.remove(acados_json_dir)
-
-        if os.path.exists(acados_c_dir):
-            shutil.rmtree(acados_c_dir)
-
-        acados_home_json_dir = os.path.join('/home/kay','acados_ocp_nlp.json')
-        acados_c_dir = '/home/kay/c_generated_code'
-
-        if os.path.exists(acados_home_json_dir):
-            os.remove(acados_home_json_dir)
-
-        if os.path.exists(acados_c_dir):
-            shutil.rmtree(acados_c_dir)
-
-
         # Create AcadosOcp
         self.ocp = AcadosOcp()
 
         # Object generation
-        quad_model_obj = QuadModel(m = 0.716,
-                                J =np.array([0.007, 0.007, 0.012]),
-                                l = 0.17,
-                                C_moment = 0.05,
-                                model_description = '+')
+        quad_model_obj = QuadModel(J =np.array([0.020, 0.020, 0.012]),
+                                l = 0.34*np.sqrt(2)/2,
+                                C_moment = 2.524e-09,
+                                model_description = 'x')
 
         # Get Quad model from the quad_model_obj
         self.model = quad_model_obj.get_acados_model()
@@ -106,14 +70,10 @@ class OcpSolver():
         :return:
         '''
         # cost Q
-        # px py pz
-        # vx vy vz
         # qw qx qy qz
         # wx wy wz
-        self.Q_mat = np.diag([1, 1, 1,
-                              0.5, 0.5, 0.5,
-                              0, 0.5, 0.5, 0.5,
-                              0.05, 0.05, 0.05])
+        self.Q_mat = np.diag([0, 1, 1, 1,
+                              0.5, 0.5, 0.5])
 
         # cost R:
         # u1, u2, u3, u4 (RPM)
@@ -170,7 +130,7 @@ class OcpSolver():
         '''
         Set ocp solver (State and reference)
         :param state: Initial state of p_xyz, v_xyz, q_wxyz, w_xyz
-        :param ref: p_xyz_ref, v_xyz_ref, q_wxyz, w_xyz
+        :param ref: q_wxyz, w_xyz
         :return: u
         '''
 
