@@ -23,7 +23,8 @@ const double &t)
     double tau_z = moment(2);
 
     dsdt(0) = psi_dot;
-    dsdt(1) = 1/J_zz*(tau_z - c_*psi_dot);
+    dsdt(1) = 1/J_zz*(tau_z 
+                      -c_*psi_dot);
 }
 
 void SystemZZ::state_to_quatf_w(const Vector2d &state, 

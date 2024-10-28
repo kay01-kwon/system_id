@@ -26,8 +26,9 @@ const double &t)
     double tau_x = moment(0);
 
     dsdt(0) = theta_dot;
-    dsdt(1) = 1/J_xx*(tau_x - m*g_(2)*(-y_CM*cos(theta) + z_CM*sin(theta))
-    -c_*theta_dot);
+    dsdt(1) = 1/J_xx*(tau_x 
+                      + m*g_(2)*(y_CM*cos(theta) - z_CM*sin(theta))
+                      -c_*theta_dot);
 }
 
 void SystemXX::state_to_quatf_w(const Vector2d &state,

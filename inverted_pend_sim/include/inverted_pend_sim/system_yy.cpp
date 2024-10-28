@@ -27,7 +27,7 @@ const double &dt)
 
     dsdt(0) = phi_dot;
     dsdt(1) = 1/J_yy*(tau_y 
-                      + m*g_(2)*(x_CM*cos(phi) + z_CM*sin(phi))
+                      - m*g_(2)*(x_CM*cos(phi) + z_CM*sin(phi))
                       -c_*phi_dot);
 }
 
