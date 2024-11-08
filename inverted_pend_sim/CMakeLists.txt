@@ -49,3 +49,14 @@ target_link_libraries(
   ${YAML_CPP_LIBRARIES}
   ${catkin_LIBRARIES}
 )
+
+add_executable(
+  trajectory_generator_node
+  src/ros_trajectory_node.cpp
+  include/trajectory_generation/trajectory_generator.cpp
+)
+
+target_link_libraries(
+  trajectory_generator_node
+  ${catkin_LIBRARIES}
+)

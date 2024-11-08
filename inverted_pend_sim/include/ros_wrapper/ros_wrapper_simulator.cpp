@@ -5,7 +5,7 @@ RosWrapperSimulator::RosWrapperSimulator(ros::NodeHandle &nh)
 {
     // Subscribe to the raw command topic
     cmd_raw_sub_ = nh.subscribe("cmd_raw", 1, &RosWrapperSimulator::cmd_raw_callback, this);
-    imu_pub_ = nh.advertise<Imu>("imu", 1);
+    imu_pub_ = nh.advertise<Imu>("/mavros/imu/data", 1);
 
     string config_file, system_type_str;
     InertialParams_t inertial_params;

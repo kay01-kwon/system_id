@@ -58,7 +58,7 @@ class nmpc_quad_node:
         # Construct message filter to subscribe
         # imu (quaternion and angular velocity), and reference
 
-        self.imu_sub = rospy.Subscriber('/imu',
+        self.imu_sub = rospy.Subscriber('/mavros/imu/data',
                                         Imu,
                                         self.Imu_callback,
                                         queue_size=1)
@@ -87,11 +87,11 @@ class nmpc_quad_node:
         self.state[6] = msg.angular_velocity.z
 
     def Ref_callback(self, msg):
-        pitch = msg.data*np.pi/180
-        self.ref[0] = np.cos(pitch/2)
-        self.ref[1] = np.sin(pitch/2)
+        yaw = msg.data*np.pi/180
+        self.ref[0] = np.cos(yaw/2)
+        self.ref[1] = 0
         self.ref[2] = 0
-        self.ref[3] = 0
+        self.ref[3] = np.sin(yaw/2)
 
         self.ref[4] = 0
         self.ref[5] = 0

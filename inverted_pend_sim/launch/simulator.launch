@@ -3,7 +3,7 @@
   <!-- Start the simulator -->
   <node name="simulator" pkg="inverted_pend_sim" type="inverted_pend_sim_node" output="screen"/>
     <param name="config_dir" value="$(find inverted_pend_sim)/config/param.yaml"/>
-    <param name="system_type" type="string" value="SYSTEM_XX"/>
-    <param name="perturb_state" type="double" value="0.10"/>
-    <param name="c" type="double"  value="0.0"/>
+    <param name="system_type" type="string" value="SYSTEM_ZZ"/>
+    <param name="perturb_state" type="double" value="0.00"/>
+    <param name="c" type="double"  value="0.01"/>
 </launch>

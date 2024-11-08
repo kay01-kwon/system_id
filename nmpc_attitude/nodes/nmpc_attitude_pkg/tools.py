@@ -114,7 +114,7 @@ def otimes(q1,q2):
 
     return cs.mtimes(q1_L, q2)
 
-def thrust2moment(model_description, thrust, arm_length, C_moment):
+def thrust2moment(model_description, thrust, arm_length, C_T, C_M):
     '''
     Convert thrust to moment
     :param model_description: '+' or 'x'
@@ -132,6 +132,6 @@ def thrust2moment(model_description, thrust, arm_length, C_moment):
         m_x = l*( thrust[0] - thrust[1] - thrust[2] + thrust[3])
         m_y = l*( -(thrust[0] + thrust[1]) + (thrust[2] + thrust[3]))
 
-    m_z = C_moment*( thrust[0] - thrust[1] + thrust[2] - thrust[3] )
+    m_z = C_M/C_T*( thrust[0] - thrust[1] + thrust[2] - thrust[3] )
 
     return m_x, m_y, m_z

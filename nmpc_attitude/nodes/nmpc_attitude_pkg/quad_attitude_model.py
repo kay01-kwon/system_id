@@ -3,7 +3,7 @@ import tools
 import casadi as cs
 
 class QuadModel:
-    def __init__(self, J, l, C_moment, model_description):
+    def __init__(self, J, l, C_T, C_M, model_description):
         '''
         Constructor for QuadModel
         :param J: Put np.diag([Jxx, Jyy, Jzz])
@@ -21,7 +21,8 @@ class QuadModel:
         # Get parameters
         # moment of inertia, lift coefficient, moment coefficient
         self.J = J
-        self.C_moment = C_moment
+        self.C_M = C_M
+        self.C_T = C_T
 
         # Model description ('x' or '+')
         self.model_description = model_description
@@ -88,7 +89,9 @@ class QuadModel:
         Jzz = self.J[2]
 
         # Convert Four rotor thrusts to moment
-        M_x, M_y, M_z = tools.thrust2moment(self.model_description, self.u, self.l, self.C_moment)
+        M_x, M_y, M_z = tools.thrust2moment(self.model_description, 
+                                            self.u, self.l, 
+                                            self.C_T, self.C_M)
 
         # Get angular acceleration due to the moment
         m_vec = cs.vertcat(M_x/Jxx , M_y/Jyy, M_z/Jzz)
@@ -107,9 +110,3 @@ class QuadModel:
         # dwdt = [M_x/Jxx, M_y/Jyy, M_z/Jzz]^T - w x (J*w)
         dwdt = m_vec - inertial_effect
         return dwdt
-
-
-
-
-
-

@@ -12,7 +12,9 @@ X0 = np.array([
 
 
 class OcpSolver():
-    def __init__(self, u_min = 0.78, u_max = 8.8, n_nodes = 10, t_horizon = 0.1):
+    def __init__(self, u_min = 0.78, u_max = 8.8, 
+                 n_nodes = 10, t_horizon = 0.1,
+                 C_T = 1.481e-07, C_M = 2.524e-09):
         '''
         Constructor for OcpSolver
         :param u_min: minimum rotor thrust (N)
@@ -25,12 +27,14 @@ class OcpSolver():
         self.ocp = AcadosOcp()
 
         self.l_ = 0.340 *np.sqrt(2)/2
-        self.C_moment = 2.524e-09
+        self.C_T = C_T
+        self.C_M = C_M
 
         # Object generation
-        quad_model_obj = QuadModel(J =np.array([0.020, 0.020, 0.012]),
+        quad_model_obj = QuadModel(J =np.array([0.020, 0.020, 0.040]),
                                 l = self.l_,
-                                C_moment = self.C_moment,
+                                C_T = self.C_T,
+                                C_M = self.C_M,
                                 model_description = 'x')
 
         # Get Quad model from the quad_model_obj
@@ -153,12 +157,18 @@ class OcpSolver():
 
         u = self.acados_ocp_solver.get(0,"u")
 
-        moment = tools.thrust2moment('x', u, self.l_, self.C_moment)
+        moment = tools.thrust2moment('x', u, self.l_, self.C_T, self.C_M)
 
-        print("Moment x: ", moment[0])
-        print("Moment y: ", moment[1])
-        print("Moment z: ", moment[2])
-        print("\n")
+        # print("Moment x: ", moment[0])
+        # print("Moment y: ", moment[1])
+        # print("Moment z: ", moment[2])
+        # print("\n")
+
+        # print("ref w: ", ref[0])
+        # print("ref x: ", ref[1])
+        # print("ref y: ", ref[2])
+        # print("ref z: ", ref[3])
+        # print("\n")
 
         self.u_prev = u
 
