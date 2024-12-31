@@ -35,6 +35,11 @@ void MomentToRPM::ros_run()
     }
 }
 
+MomentToRPM::~MomentToRPM()
+{
+    // Do nothing
+}
+
 void MomentToRPM::moment_callback(const Wrench::ConstPtr &msg)
 {
     Vector3d moment;
