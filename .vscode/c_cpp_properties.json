@@ -31,7 +31,8 @@
                 "/home/kay/voxfield_ws/src/voxfield/voxblox_ros/include/**",
                 "/home/kay/voxfield_ws/src/voxfield/voxblox_rviz_plugin/include/**",
                 "/usr/include/**",
-                "/home/kay/catkin_ws/devel/include"
+                "/home/kay/catkin_ws/devel/include",
+                "${workspaceFolder}/moment_to_rpm/include"
             ],
             "name": "ROS",
             "intelliSenseMode": "gcc-x64",

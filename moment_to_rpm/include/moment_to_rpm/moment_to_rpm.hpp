@@ -28,13 +28,17 @@ class MomentToRPM
     
         void moment_callback(const Wrench::ConstPtr &msg);
 
-        void moment_to_rpm(const Vector3d &moment, Vector4d &rpm);
+        void moment_to_rpm(const Vector4d &f_z_moment, Vector4d &rpm);
 
         double C_T_{0.};
         double C_M_{2e-9};
         double l_{0.340};
 
-        Matrix3x4d K;
+        double max_bit_{8191};
+        double max_rpm_{9800};
+        double min_rpm_{2000};
+
+        Matrix4x4d K_inverse_;
 
 };
 
