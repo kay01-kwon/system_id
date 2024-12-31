@@ -12,9 +12,9 @@ X0 = np.array([
 
 
 class OcpSolver():
-    def __init__(self, u_min = 0.78, u_max = 8.8, 
-                 n_nodes = 10, t_horizon = 0.1,
-                 C_T = 1.481e-07, C_M = 2.524e-09):
+    def __init__(self, u_min = 0.78, u_max = 2.5, 
+                 n_nodes = 10, t_horizon = 1,
+                 C_T = 1.481e-07, C_M = 2.01309304e-09):
         '''
         Constructor for OcpSolver
         :param u_min: minimum rotor thrust (N)
@@ -31,7 +31,7 @@ class OcpSolver():
         self.C_M = C_M
 
         # Object generation
-        quad_model_obj = QuadModel(J =np.array([0.020, 0.020, 0.040]),
+        quad_model_obj = QuadModel(J =np.array([0.026, 0.026, 0.030]),
                                 l = self.l_,
                                 C_T = self.C_T,
                                 C_M = self.C_M,
@@ -80,12 +80,12 @@ class OcpSolver():
         # cost Q
         # qw qx qy qz
         # wx wy wz
-        self.Q_mat = np.diag([0, 1, 1, 1,
-                              0.5, 0.5, 0.5])
+        self.Q_mat = np.diag([0, 0.5, 0.5, 0.5,
+                              0.1, 0.1, 0.01])
 
         # cost R:
         # u1, u2, u3, u4 (RPM)
-        self.R_mat = 0.01*np.diag([1.0, 1.0, 1.0, 1.0])
+        self.R_mat = 0.001*np.diag([1.0, 1.0, 1.0, 1.0])
 
         # Set cost type for OCP
         self.ocp.cost.cost_type = 'LINEAR_LS'
@@ -159,10 +159,10 @@ class OcpSolver():
 
         moment = tools.thrust2moment('x', u, self.l_, self.C_T, self.C_M)
 
-        # print("Moment x: ", moment[0])
-        # print("Moment y: ", moment[1])
-        # print("Moment z: ", moment[2])
-        # print("\n")
+        print("Moment x: ", moment[0])
+        print("Moment y: ", moment[1])
+        print("Moment z: ", moment[2])
+        print("\n")
 
         # print("ref w: ", ref[0])
         # print("ref x: ", ref[1])

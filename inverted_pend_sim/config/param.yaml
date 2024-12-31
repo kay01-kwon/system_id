@@ -7,7 +7,7 @@ inertial_params:
         Jxz: 0
         Jyy: 0.020
         Jyz: 0
-        Jzz: 0.012
+        Jzz: 0.040
     CM:
         x: 0.00
         y: 0.001

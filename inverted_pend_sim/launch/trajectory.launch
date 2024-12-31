@@ -1,0 +1,7 @@
+<launch>
+
+  <!-- Start the simulator -->
+  <node name="traj" pkg="inverted_pend_sim" type="trajectory_generator_node" output="screen"/>
+    <param name="freq" type="double" value="0.010"/>
+    <param name="ampl" type="double"  value="15.0"/>
+</launch>

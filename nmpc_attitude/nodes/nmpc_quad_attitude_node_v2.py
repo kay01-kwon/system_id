@@ -18,7 +18,9 @@ import numpy as np
 import nmpc_attitude_pkg.tools
 from nmpc_attitude_pkg import ocp_solver
 import rospy
+import message_filters
 from sensor_msgs.msg import Imu
+from nav_msgs.msg import Odometry
 from ros_libcanard.msg import cmd_raw
 from std_msgs.msg import Float64
 
@@ -47,6 +49,8 @@ class nmpc_quad_node:
         self.MaxRPM = 9800
         self.RPM2Bit = self.MaxBit/self.MaxRPM
 
+        self.psi_prev = 0
+
         self.ros_setup()
 
     def ros_setup(self):
@@ -55,12 +59,9 @@ class nmpc_quad_node:
         :return: None
         '''
 
-        # Construct message filter to subscribe
-        # imu (quaternion and angular velocity), and reference
-
-        self.imu_sub = rospy.Subscriber('/imu/data',
-                                        Imu,
-                                        self.Imu_callback,
+        self.odom_sub = rospy.Subscriber('/vins_estimator/odometry',
+                                        Odometry,
+                                        self.odom_callback,
                                         queue_size=1)
 
         self.ref_sub = rospy.Subscriber('/ref',
@@ -69,36 +70,33 @@ class nmpc_quad_node:
                                         queue_size=1)
 
 
+        # self.synchronizer.registerCallback(self.odom_imu_callback)
+
+
         # Input publisher to esc
         self.input_pub = rospy.Publisher('/cmd_raw',
                                          cmd_raw,
                                          queue_size=1)
         self.ros_rate = rospy.Rate(100)
-
-    def Imu_callback(self, msg):
-        qw = msg.orientation.w
-        qx = msg.orientation.x
-        qy = msg.orientation.y
-        qz = msg.orientation.z
+    def odom_callback(self, msg):
+        qw = msg.pose.pose.orientation.w
+        qx = msg.pose.pose.orientation.x
+        qy = msg.pose.pose.orientation.y
+        qz = msg.pose.pose.orientation.z
 
         psi = np.arctan2(2*(qw*qz + qx*qy), 1 - 2*(qy*qy + qz*qz))
-        self.state[0] = np.cos(psi/2)
+
+        self.state[0] = np.cos(psi / 2)
         self.state[1] = 0
         self.state[2] = 0
-        self.state[3] = np.sin(psi/2)
+        self.state[3] = np.sin(psi / 2)
 
         self.state[4] = 0
         self.state[5] = 0
-        self.state[6] = msg.angular_velocity.z
+        self.state[6] = 0
 
-        # self.state[0] = msg.orientation.w
-        # self.state[1] = msg.orientation.x
-        # self.state[2] = msg.orientation.y
-        # self.state[3] = msg.orientation.z
-
-        # self.state[4] = msg.angular_velocity.x
-        # self.state[5] = msg.angular_velocity.y
-        # self.state[6] = msg.angular_velocity.z
+        # print('Callback')
+        # print(self.state[6])
 
     def Ref_callback(self, msg):
         yaw = msg.data*np.pi/180
