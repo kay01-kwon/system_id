@@ -1,0 +1,7 @@
+<launch>
+  <!-- Start the moment node -->
+  <node name="moment" pkg="moment_to_rpm" type="moment_node" output="screen"/>
+    <param name="C_T" type="double" value="148e-9"/>
+    <param name="C_M" type="double"  value="2e-9"/>
+    <param name="l" type="double" value="0.340"/>
+</launch>
