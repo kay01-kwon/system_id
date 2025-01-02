@@ -1,0 +1,9 @@
+<launch>
+  <!-- Start the moment node -->
+  <node name="moment_controller" pkg="moment_control" type="moment_control_node" output="screen"/>
+    <param name="C_T" type="double" value="148e-9"/>
+    <param name="C_M" type="double"  value="2e-9"/>
+    <param name="l" type="double" value="0.340"/>
+    <param name="K_p" type="double" value="0.5"/>
+    <param name="f_z" type="double" value="4.0"/>
+</launch>

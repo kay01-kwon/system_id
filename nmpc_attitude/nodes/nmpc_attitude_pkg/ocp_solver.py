@@ -31,7 +31,7 @@ class OcpSolver():
         self.C_M = C_M
 
         # Object generation
-        quad_model_obj = QuadModel(J =np.array([0.026, 0.026, 0.030]),
+        quad_model_obj = QuadModel(J =np.array([0.026, 0.026, 0.040]),
                                 l = self.l_,
                                 C_T = self.C_T,
                                 C_M = self.C_M,

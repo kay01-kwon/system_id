@@ -76,6 +76,9 @@ class nmpc_quad_node:
         self.ros_rate = rospy.Rate(100)
 
     def Imu_callback(self, msg):
+        
+        alpha = 0.7
+
         qw = msg.orientation.w
         qx = msg.orientation.x
         qy = msg.orientation.y
@@ -89,7 +92,8 @@ class nmpc_quad_node:
 
         self.state[4] = 0
         self.state[5] = 0
-        self.state[6] = msg.angular_velocity.z
+        # self.state[6] = alpha*msg.angular_velocity.z + (1-alpha)*self.state[6]
+        self.state[6] = 0
 
         # self.state[0] = msg.orientation.w
         # self.state[1] = msg.orientation.x
